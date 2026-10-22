@@ -28,6 +28,11 @@ const defaultDeps: NotifierDeps = {
       silent: false,
     });
     n.on("click", onClick);
+    // macOS reports a notification it will not show (an unsigned build, notifications turned
+    // off) through this event, never by throwing from show().
+    n.on("failed", (_event, error) => {
+      logger.warn("permissions", "notification_show_failed", { error });
+    });
     n.show();
   },
 };
